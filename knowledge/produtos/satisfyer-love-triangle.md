@@ -1,0 +1,21 @@
+# Satisfyer Love Triangle Connect - Air-Pulse + Vibration
+
+- Preço: £60.88
+- Link: https://royalcaress.co.uk/products/satisfyer-love-triangle
+- Cores: White (branco) e Black (preto).
+- Tipo: estimulador para casais com tecnologia Air-Pulse (ondas de pressão) combinada com vibração profunda.
+- Design triangular com cabeça de silicone macio.
+- App gratuito Satisfyer Connect: programas personalizáveis, e uso à distância (jogo a distância para casais).
+- Acompanha capa prática para guardar com higiene.
+- Peso aproximado: 116 g.
+- Conectividade: [PREENCHER: Bluetooth? versão? compatibilidade com iOS/Android]
+- Resistência à água (IPX): [PREENCHER]
+- Nível de ruído: [PREENCHER]
+- Bateria e carga: [PREENCHER]
+- Material: [PREENCHER]
+- Dimensões: [PREENCHER]
+- O que vem na caixa: [PREENCHER]
+- Limpeza e cuidados: [PREENCHER]
+- Lubrificante compatível: [PREENCHER]
+- Garantia: [PREENCHER]
+- Privacidade do app: [PREENCHER: dados que o app coleta]

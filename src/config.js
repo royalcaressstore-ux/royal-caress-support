@@ -28,6 +28,8 @@ export const config = {
   shopify: {
     store: env.SHOPIFY_STORE || '',
     token: env.SHOPIFY_ADMIN_TOKEN || '',
+    clientId: env.SHOPIFY_CLIENT_ID || '',
+    clientSecret: env.SHOPIFY_CLIENT_SECRET || '',
     version: env.SHOPIFY_API_VERSION || '2025-10',
   },
   whatsapp: {

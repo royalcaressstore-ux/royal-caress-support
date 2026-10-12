@@ -7,17 +7,42 @@ export const normalizeOrderNumber = (v) => {
 const sameEmail = (a, b) => !!a && !!b && String(a).trim().toLowerCase() === String(b).trim().toLowerCase();
 
 export function shopifyEnabled() {
-  return !!(config.shopify.store && config.shopify.token);
+  const c = config.shopify;
+  return !!(c.store && (c.token || (c.clientId && c.clientSecret)));
+}
+
+// Token fixo (SHOPIFY_ADMIN_TOKEN) ou, em apps novos do Dev Dashboard, token obtido com
+// Client ID + Client Secret (client credentials) e renovado antes de expirar (~24 h).
+let cached = { token: '', expiresAt: 0 };
+export function resetShopifyTokenCache() { cached = { token: '', expiresAt: 0 }; }
+
+async function getToken(force = false) {
+  const c = config.shopify;
+  if (c.token) return c.token;
+  if (!force && cached.token && Date.now() < cached.expiresAt - 5 * 60 * 1000) return cached.token;
+  const res = await fetch(`https://${c.store}/admin/oauth/access_token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ client_id: c.clientId, client_secret: c.clientSecret, grant_type: 'client_credentials' }),
+    signal: AbortSignal.timeout(15000),
+  });
+  if (!res.ok) throw new Error(`Shopify token HTTP ${res.status}`);
+  const j = await res.json();
+  if (!j.access_token) throw new Error('Shopify: resposta sem access_token');
+  cached = { token: j.access_token, expiresAt: Date.now() + (Number(j.expires_in) || 86400) * 1000 };
+  return cached.token;
 }
 
 async function gql(query, variables) {
   const url = `https://${config.shopify.store}/admin/api/${config.shopify.version}/graphql.json`;
-  const res = await fetch(url, {
+  const call = async (force) => fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': config.shopify.token },
+    headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': await getToken(force) },
     body: JSON.stringify({ query, variables }),
     signal: AbortSignal.timeout(15000),
   });
+  let res = await call(false);
+  if (res.status === 401 && !config.shopify.token) res = await call(true); // token expirou: renova e tenta uma vez
   if (!res.ok) throw new Error(`Shopify HTTP ${res.status}`);
   const json = await res.json();
   if (json.errors) throw new Error('Shopify: ' + JSON.stringify(json.errors).slice(0, 300));
